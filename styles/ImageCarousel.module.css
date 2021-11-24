@@ -2,10 +2,6 @@
     margin-top: 20px;
 }
 
-.imgContainer {
-    border: 2px black solid;
-}
-
 .selectorContainer {
     display: flex;
     justify-content: space-between;

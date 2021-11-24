@@ -1,20 +1,15 @@
 import {useEffect, useState} from "react";
 import Image from 'next/image'
-import {inspect} from "util";
 import styles from "/styles/ImageCarousel.module.css"
 import leftArrow from "/public/LeftArrow.svg"
 import rightArrow from "/public/RightArrow.svg"
-
-interface CullyImage {
-    id: string,
-    filename: string,
-    url: string
-}
+import CullyImage from "./CullyImage";
+import {CullyImageType} from "../types";
 
 const ImageCarousel = () => {
-    const [images, setImages] = useState<CullyImage[]>();
+    const [images, setImages] = useState<CullyImageType[]>();
     useEffect(() => {
-        const getAllImages = async () => {
+        const getAllImages = async (): Promise<CullyImageType[]> => {
             const imageEndpoint = process.env.NEXT_PUBLIC_CULLY_API + "/images";
             const res = await fetch(imageEndpoint);
             const resJson = await res.json();
@@ -33,9 +28,7 @@ const ImageCarousel = () => {
             {
                 images ?
                     <div>
-                        <div className={styles.imgContainer}>
-                            <Image src={images[1]?.url} width={926} height={618} />
-                        </div>
+                        <CullyImage image={images[1]}/>
                         <div className={styles.selectorContainer}>
                             <Image src={leftArrow}/>
                             <p>{images[1]?.filename}</p>

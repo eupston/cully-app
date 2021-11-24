@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect} from "react";
 import Image from 'next/image'
 import styles from "/styles/CullyImage.module.css"
 import {CullyImageType, FaceType} from "../types";
@@ -13,37 +13,17 @@ interface CullyImageDimensions {
 }
 
 const CullyImage = ({image} : CullyImageProps) => {
-    const [faces, setFaces] = useState<FaceType[]>();
-    const [dimensions, setDimensions] = useState<CullyImageDimensions>();
-
     useEffect(() => {
-        const getFaces = async (): Promise<FaceType[]> => {
-            const coordsEndpoint = process.env.NEXT_PUBLIC_CULLY_API + `/images/${image.id}/faces`;
-            const res = await fetch(coordsEndpoint);
-            const resJson = await res.json();
-            return resJson.data;
-        }
-        getFaces()
-            .then(faces => {
-                setFaces(faces);
+        if(image.faces && image.faces?.length > 0){
+            const imageContainerElement = document.getElementById("cullyImageContainer") as HTMLImageElement;
+            imageContainerElement.style.display = "block";
+            const imageElement = document.getElementById(image.filename) as HTMLImageElement;
+            image.faces.map((face,index) => {
+                drawFaceCoordinates(
+                {width:imageElement.width,height:imageElement.height}, face, index);
             })
-            .catch(error => {
-                console.error(error);
-            });
-    }, []);
-
-    useEffect(() => {
-        const imageElement = document.getElementById(image.filename) as HTMLImageElement;
-        setDimensions({width: imageElement?.width, height: imageElement?.height})
-    }, [faces]);
-
-    useEffect(() => {
-        if(faces && dimensions){
-            faces.map((face, index) => {
-                drawFaceCoordinates(dimensions, face, index);
-            });
         }
-    }, [dimensions]);
+    }, [image]);
 
     const drawFaceCoordinates = (imgDimensions: CullyImageDimensions, face: FaceType, index: number) => {
         const x1 = face.xmin * imgDimensions.width;
@@ -57,11 +37,11 @@ const CullyImage = ({image} : CullyImageProps) => {
     }
 
     return(
-        <div className={styles.imgContainer}>
-            {faces?.map((_faces, idx) => <div id={`face_${idx}`} key={idx} className={styles.faceBox}/>)}
-            <Image id={image.filename} src={image.url} width={926} height={618}/>
+        <div id={"cullyImageContainer"} className={styles.imgContainer}>
+            {image?.faces?.map((_faces, idx) => <div id={`face_${idx}`} key={idx} className={styles.faceBox}/>)}
+            <Image id={image?.filename} src={image?.url} width={968} height={646}/>
         </div>
     )
 }
 
-export default CullyImage
+export default CullyImage;

@@ -1,6 +1,7 @@
 .imgContainer {
     border: 2px black solid;
     position: relative;
+    display: none;
 }
 
 .faceBox {

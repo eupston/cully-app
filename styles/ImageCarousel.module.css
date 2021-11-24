@@ -18,3 +18,20 @@
     align-items: center;
     letter-spacing: 0.126px;
 }
+
+.arrows {
+    cursor: pointer;
+}
+
+.spinner {
+    object-fit: fill;
+    transition: all 0.4s;
+    z-index: 2;
+    animation: rotate 1.5s linear infinite;
+}
+
+@keyframes rotate {
+    to {
+        transform: rotate(360deg);
+    }
+}

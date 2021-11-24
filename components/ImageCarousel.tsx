@@ -50,7 +50,6 @@ const ImageCarousel = () => {
                     url:currentImg.url,
                     faces:currentFaces
                 })
-                setLoading(false);
             });
         }
     },[currentImageIdx])
@@ -80,10 +79,10 @@ const ImageCarousel = () => {
         <div className={styles.carouselContainer} >
             <div>
                 {
-                loading ?
-                    <Image className={styles.spinner} src={spinner}/> :
-                        <CullyImage image={currentImage as CullyImageType}/>
+                loading &&
+                    <Image className={styles.spinner} src={spinner}/>
                 }
+                <CullyImage finishedLoading={setLoading} image={currentImage as CullyImageType}/>
                 <div className={styles.selectorContainer}>
                     <Image className={styles.arrows} onClick={leftClickHandler} src={leftArrow}/>
                     <p>{currentImage?.filename}</p>

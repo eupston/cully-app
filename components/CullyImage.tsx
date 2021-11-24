@@ -4,7 +4,8 @@ import styles from "/styles/CullyImage.module.css"
 import {CullyImageType, FaceType} from "../types";
 
 interface CullyImageProps {
-    image: CullyImageType
+    image: CullyImageType,
+    finishedLoading: any
 }
 
 interface CullyImageDimensions {
@@ -12,16 +13,11 @@ interface CullyImageDimensions {
     height: number,
 }
 
-const CullyImage = ({image} : CullyImageProps) => {
+const CullyImage = ({image, finishedLoading} : CullyImageProps) => {
     useEffect(() => {
-        if(image.faces && image.faces?.length > 0){
+        if(image?.faces && image.faces?.length > 0){
             const imageContainerElement = document.getElementById("cullyImageContainer") as HTMLImageElement;
-            imageContainerElement.style.display = "block";
-            const imageElement = document.getElementById(image.filename) as HTMLImageElement;
-            image.faces.map((face,index) => {
-                drawFaceCoordinates(
-                {width:imageElement.width,height:imageElement.height}, face, index);
-            })
+            imageContainerElement.style.display = "none";
         }
     }, [image]);
 
@@ -36,11 +32,28 @@ const CullyImage = ({image} : CullyImageProps) => {
         );
     }
 
+    const imageLoadedHandler = () => {
+        const imageContainerElement = document.getElementById("cullyImageContainer") as HTMLImageElement;
+        imageContainerElement.style.display = "block";
+        const imageElement = document.getElementById(image.filename) as HTMLImageElement;
+        image?.faces?.map((face,index) => {
+            drawFaceCoordinates(
+                {width:imageElement.width,height:imageElement.height}, face, index);
+        })
+        finishedLoading(false);
+    }
+
     return(
-        <div id={"cullyImageContainer"} className={styles.imgContainer}>
-            {image?.faces?.map((_faces, idx) => <div id={`face_${idx}`} key={idx} className={styles.faceBox}/>)}
-            <Image id={image?.filename} src={image?.url} width={968} height={646}/>
-        </div>
+        <>
+        {
+            image ?
+                <div id={"cullyImageContainer"} className={styles.imgContainer}>
+                    {image?.faces?.map((_faces, idx) => <div id={`face_${idx}`} key={idx} className={styles.faceBox}/>)}
+                    <Image onLoad={imageLoadedHandler} id={image?.filename} src={image?.url} width={968} height={646}/>
+                </div>
+                : null
+        }
+        </>
     )
 }
 

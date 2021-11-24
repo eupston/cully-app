@@ -1,0 +1,24 @@
+.carouselContainer {
+    margin-top: 20px;
+}
+
+.imgContainer {
+    border: 2px black solid;
+}
+
+.selectorContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.selectorContainer p {
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: 500;
+    font-size: 12px;
+    line-height: 23px;
+    display: flex;
+    align-items: center;
+    letter-spacing: 0.126px;
+}

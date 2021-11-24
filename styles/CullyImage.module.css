@@ -1,5 +1,6 @@
 .imgContainer {
     border: 2px black solid;
+    height: 650px;
     position: relative;
     display: none;
 }

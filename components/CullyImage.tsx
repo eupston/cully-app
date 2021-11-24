@@ -1,7 +1,8 @@
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 import Image from 'next/image'
 import styles from "/styles/CullyImage.module.css"
 import {CullyImageType, FaceType} from "../types";
+import deleteBtn from "/public/DeleteButton.svg";
 
 interface CullyImageProps {
     image: CullyImageType,
@@ -17,6 +18,9 @@ interface CullyImageDimensions {
 }
 
 const CullyImage = ({image, setLoading, finishedLoading, deleteFaceBoxHandler, faces} : CullyImageProps) => {
+
+    const [deleteBtnNumber, setDeleteBtnNumber] = useState<number>(-1);
+
     useEffect(() => {
         if(image){
             const imageContainerElement = document.getElementById("cullyImageContainer") as HTMLImageElement;
@@ -60,7 +64,22 @@ const CullyImage = ({image, setLoading, finishedLoading, deleteFaceBoxHandler, f
         {
             image ?
                 <div id={"cullyImageContainer"} className={styles.imgContainer}>
-                    {faces?.map((face, idx) => <div onClick={ () => deleteFaceBoxHandler(face)} id={`face_${idx}`} key={idx} className={styles.faceBox}/>)}
+                    {faces?.map((face, idx) => {
+                       return(
+                            <div onClick={ () => deleteFaceBoxHandler(face)}
+                                 id={`face_${idx}`} key={idx}
+                                 className={styles.faceBox}
+                                 onMouseEnter={() => setDeleteBtnNumber(idx)}
+                                 onMouseLeave={() => setDeleteBtnNumber(-1)}
+                            >
+                            {deleteBtnNumber === idx &&
+                                <div className={styles.deleteButton}>
+                                    <Image src={deleteBtn}/>
+                                </div>
+                            }
+                            </div>
+                        )}
+                    )}
                     <Image onLoad={imageLoadedHandler} id={image?.filename} src={image?.url} width={968} height={646}/>
                 </div>
                 : null

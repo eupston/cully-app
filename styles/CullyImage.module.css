@@ -4,6 +4,9 @@
     display: none;
 }
 
+.faceBoxContainer{
+    position: relative;
+}
 
 .faceBox {
     display: none;
@@ -14,4 +17,13 @@
 
 .faceBox:hover {
     border: 2px solid #FF0000;
+}
+
+.deleteButton {
+    position: absolute;
+    z-index: 2;
+    right: -120px;
+    top: -10px;
+    width:114px;
+    height:26px;
 }

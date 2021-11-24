@@ -10,6 +10,7 @@ import {CullyImageType, FaceType} from "../types";
 
 const ImageCarousel = () => {
     const [images, setImages] = useState<CullyImageType[]>();
+    const [faces, setFaces] = useState<FaceType[]>();
     const [currentImageIdx, setCurrentImageIdx] = useState<number>(0);
     const [currentImage, setCurrentImage] = useState<CullyImageType>();
     const [loading, setLoading] = useState<boolean>(true);
@@ -29,8 +30,8 @@ const ImageCarousel = () => {
                         id:currentImg.id,
                         filename: currentImg.filename,
                         url:currentImg.url,
-                        faces:currentFaces
                     });
+                    setFaces(currentFaces);
                     setImages(images);
                     setLoading(false);
                 });
@@ -48,8 +49,8 @@ const ImageCarousel = () => {
                     id:currentImg.id,
                     filename: currentImg.filename,
                     url:currentImg.url,
-                    faces:currentFaces
                 })
+                setFaces(currentFaces);
             });
         }
     },[currentImageIdx])
@@ -57,14 +58,12 @@ const ImageCarousel = () => {
     const leftClickHandler = () => {
         if(currentImageIdx !== 0){
             setCurrentImageIdx(currentImageIdx - 1);
-            setLoading(true);
         }
     }
 
     const rightClickHandler = async () => {
         if(images && currentImageIdx !== images.length - 1){
             setCurrentImageIdx(currentImageIdx + 1);
-            setLoading(true);
         }
     }
 
@@ -75,6 +74,12 @@ const ImageCarousel = () => {
         return resJson.data;
     }
 
+    const deleteFaceBoxHandler = (removeFace: FaceType) => {
+        const newFaces = faces?.filter(face => face.id !== removeFace.id);
+        //persist facebox state
+        setFaces(newFaces);
+    }
+
     return(
         <div className={styles.carouselContainer} >
             <div>
@@ -82,7 +87,13 @@ const ImageCarousel = () => {
                 loading &&
                     <Image className={styles.spinner} src={spinner}/>
                 }
-                <CullyImage finishedLoading={setLoading} image={currentImage as CullyImageType}/>
+                <CullyImage
+                    deleteFaceBoxHandler={deleteFaceBoxHandler}
+                    setLoading={setLoading}
+                    finishedLoading={setLoading}
+                    image={currentImage as CullyImageType}
+                    faces={faces as FaceType[]}
+                />
                 <div className={styles.selectorContainer}>
                     <Image className={styles.arrows} onClick={leftClickHandler} src={leftArrow}/>
                     <p>{currentImage?.filename}</p>

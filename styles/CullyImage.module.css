@@ -4,9 +4,14 @@
     display: none;
 }
 
+
 .faceBox {
     display: none;
     position: absolute;
     z-index: 1;
-    border: 5px solid red;
+    border: 2px solid #7000FF;
+}
+
+.faceBox:hover {
+    border: 2px solid #FF0000;
 }

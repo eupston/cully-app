@@ -17,19 +17,6 @@ const CullyImage = ({image} : CullyImageProps) => {
     const [dimensions, setDimensions] = useState<CullyImageDimensions>();
 
     useEffect(() => {
-        if(faces && dimensions){
-            faces.map((face, index) => {
-                drawFaceCoordinates(dimensions, face, index);
-            });
-        }
-    }, [dimensions]);
-
-    useEffect(() => {
-        const imageElement = document.getElementById(image.filename) as HTMLImageElement;
-        setDimensions({width: imageElement?.width, height: imageElement?.height})
-    }, [faces]);
-
-    useEffect(() => {
         const getFaces = async (): Promise<FaceType[]> => {
             const coordsEndpoint = process.env.NEXT_PUBLIC_CULLY_API + `/images/${image.id}/faces`;
             const res = await fetch(coordsEndpoint);
@@ -44,6 +31,19 @@ const CullyImage = ({image} : CullyImageProps) => {
                 console.error(error);
             });
     }, []);
+
+    useEffect(() => {
+        const imageElement = document.getElementById(image.filename) as HTMLImageElement;
+        setDimensions({width: imageElement?.width, height: imageElement?.height})
+    }, [faces]);
+
+    useEffect(() => {
+        if(faces && dimensions){
+            faces.map((face, index) => {
+                drawFaceCoordinates(dimensions, face, index);
+            });
+        }
+    }, [dimensions]);
 
     const drawFaceCoordinates = (imgDimensions: CullyImageDimensions, face: FaceType, index: number) => {
         const x1 = face.xmin * imgDimensions.width;

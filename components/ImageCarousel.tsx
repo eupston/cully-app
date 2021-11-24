@@ -8,6 +8,8 @@ import {CullyImageType} from "../types";
 
 const ImageCarousel = () => {
     const [images, setImages] = useState<CullyImageType[]>();
+    const [currentImageIdx, setCurrentImageIdx] = useState<number>(0);
+
     useEffect(() => {
         const getAllImages = async (): Promise<CullyImageType[]> => {
             const imageEndpoint = process.env.NEXT_PUBLIC_CULLY_API + "/images";
@@ -23,16 +25,29 @@ const ImageCarousel = () => {
                 console.error(error);
         });
     }, [])
+
+    const leftClickHandler = () => {
+        if(currentImageIdx !== 0){
+            setCurrentImageIdx(currentImageIdx - 1)
+        }
+    }
+
+    const rightClickHandler = () => {
+        if(images && currentImageIdx !== images.length - 1){
+            setCurrentImageIdx(currentImageIdx + 1)
+        }
+    }
+
     return(
         <div className={styles.carouselContainer} >
             {
                 images ?
                     <div>
-                        <CullyImage image={images[1]}/>
+                        <CullyImage image={images[currentImageIdx]}/>
                         <div className={styles.selectorContainer}>
-                            <Image src={leftArrow}/>
-                            <p>{images[1]?.filename}</p>
-                            <Image src={rightArrow}/>
+                            <Image onClick={leftClickHandler} src={leftArrow}/>
+                            <p>{images[currentImageIdx]?.filename}</p>
+                            <Image onClick={rightClickHandler} src={rightArrow}/>
                         </div>
                     </div>
                     :
